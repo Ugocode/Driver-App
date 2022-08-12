@@ -6,7 +6,10 @@ class RattingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Rattings')),
+      appBar: AppBar(
+        title: const Text('Rattings'),
+        leading: const Text(""),
+      ),
     );
   }
 }

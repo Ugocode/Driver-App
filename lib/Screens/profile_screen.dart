@@ -1,3 +1,5 @@
+import 'package:drivers_app/Global/global.dart';
+import 'package:drivers_app/Screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -6,7 +8,20 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: AppBar(
+        title: const Text('Profile'),
+        leading: const Text(""),
+      ),
+      body: Center(
+          child: ElevatedButton(
+        onPressed: (() {
+          fireAuth.signOut();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const MySplashScreen()),
+              (Route<dynamic> route) => false);
+        }),
+        child: const Text('SignOut'),
+      )),
     );
   }
 }
