@@ -37,6 +37,8 @@ class _MyBottomNavigatorPageState extends State<MyBottomNavigatorPage> {
       bottomNavigationBar: BottomNavigationBar(
         enableFeedback: true,
         elevation: 50,
+        //backgroundColor: Colors.black,
+        // fixedColor: Colors.blue,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
