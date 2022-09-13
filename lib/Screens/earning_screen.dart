@@ -6,7 +6,10 @@ class EarningsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Earnings')),
+      appBar: AppBar(
+        title: const Text('Earnings'),
+        leading: const Text(""),
+      ),
     );
   }
 }
