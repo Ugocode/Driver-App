@@ -1,14 +1,17 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:drivers_app/Global/global.dart';
 import 'package:drivers_app/Models/user_ride_request_info.dart';
+import 'package:drivers_app/Push_Notifications/notification_dialog_box.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class PushNotificationSystem {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  Future initializeCloudMessaging() async {
+  Future initializeCloudMessaging(BuildContext context) async {
     //1. Terminted state
     //when the app is completely closed
     FirebaseMessaging.instance
@@ -25,7 +28,8 @@ class PushNotificationSystem {
           "this is the remote message => \n ${remoteMessage!.data["rideRequestId"]}");
 
       //deisplay the ride request information = user information who requested the ride
-      readUserRideRequestInformation(remoteMessage.data["rideRequestId"]);
+      readUserRideRequestInformation(
+          (remoteMessage.data["rideRequestId"]), context);
     });
 
 /////////////////////////////////////////////////////////////////////////////
@@ -37,12 +41,14 @@ class PushNotificationSystem {
           "this is the remote message => \n ${remoteMessage!.data["rideRequestId"]}");
 
       //deisplay the ride request information = user information who requested the ride
-      readUserRideRequestInformation(remoteMessage.data["rideRequestId"]);
+      readUserRideRequestInformation(
+          remoteMessage.data["rideRequestId"], context);
     });
   }
 
 //reide request function:
-  readUserRideRequestInformation(String userRideRequestId) {
+  readUserRideRequestInformation(
+      String userRideRequestId, BuildContext context) {
     FirebaseDatabase.instance
         .ref()
         .child("All Ride Requests")
@@ -50,6 +56,9 @@ class PushNotificationSystem {
         .once()
         .then((snapData) {
       if (snapData.snapshot.value != null) {
+        audioPlayer.open(Audio("music/music_notification.mp3"));
+        audioPlayer.play();
+
         double originLat = double.parse(
             (snapData.snapshot.value! as Map)["origin"]["latitude"].toString());
         double originLng = double.parse(
@@ -87,8 +96,13 @@ class PushNotificationSystem {
         userRideRequestDetails.userName = userName;
         userRideRequestDetails.userPhone = userPhone;
 
-        print(
-            "user rsde request info::=> $userName \n $userPhone \n $originAddress");
+        showDialog(
+            context: context,
+            builder: ((context) {
+              return NotificationDialogBox(
+                userRideRequestDetails: userRideRequestDetails,
+              );
+            }));
       } else {
         Fluttertoast.showToast(msg: "This RideRequest id do not exist");
       }
