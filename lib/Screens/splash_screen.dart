@@ -1,10 +1,14 @@
 import 'dart:async';
 
-import 'package:drivers_app/Authentication/registration_screen.dart';
+import 'package:drivers_app/Global/global.dart';
+import 'package:drivers_app/Screens/bottom_navigation.dart';
+
 // import 'package:drivers_app/Screens/bottom_navigation.dart';
 // import 'package:drivers_app/Screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../Authentication/login_screen.dart';
 
 class MySplashScreen extends StatefulWidget {
   const MySplashScreen({Key? key}) : super(key: key);
@@ -14,12 +18,23 @@ class MySplashScreen extends StatefulWidget {
 }
 
 class _MySplashScreenState extends State<MySplashScreen> {
+  //set timer for the app to get the user or not:
   startTimer() {
-    Timer(const Duration(seconds: 6), () async {
-      //to send user to home screen
-
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const RegistrationScreen()));
+    Timer(const Duration(seconds: 4), () async {
+      // ignore: await_only_futures
+      if (await fireAuth.currentUser != null) {
+        //then assign the user to the current user:
+        currentFirebaseUser = fireAuth.currentUser;
+        //send the user to the home page
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (context) => const MyBottomNavigatorPage()),
+            (Route<dynamic> route) => false);
+      } else {
+        //Send the uuser to the login Screen:
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()));
+      }
     });
   }
 
@@ -40,7 +55,7 @@ class _MySplashScreenState extends State<MySplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'Assets/images/logo.png',
+                'Assets/images/logo22.png',
                 height: 180,
                 width: 220,
               ),
@@ -51,7 +66,7 @@ class _MySplashScreenState extends State<MySplashScreen> {
                 'Flash Ryder for Drivers',
                 style: GoogleFonts.getFont('Pacifico',
                     textStyle:
-                        const TextStyle(fontSize: 20, color: Colors.white)),
+                        const TextStyle(fontSize: 20, color: Colors.pink)),
               )
             ],
           )),
